@@ -1,48 +1,53 @@
 /**
-       * 1) Make board with parameters
-       * 2) Place bombs randomly
-       * 3) Clicking on a tile that is not a bomb will show number of bombs around it
-       */
-
-
-/**
- * TODO:
- *  Make win, loose sequence
- * Add animations
- * Add pictures
+ * Made by Martin Goncharov 17.10.2020
  */
+
 
 module Minesweeper {
     const BOARD_SELECTOR = '[data-js-board]';
     let boardArray = [];
+    let gameEnded = false;
 
     const randomInt = (min, max) => {
         return Math.floor(Math.random() * (max - min + 1)) + min;
     }
 
+    const reinit = () => {
+        $('#board').children().remove();
+        hideMessage();
+        gameEnded = false;
+        Init();
+    }
 
     export const Init = () => {
         preventRightClickContextMenu();
-
+        initClickListeners();
         let boardData = {
-            sizeX: 24,
-            sizeY: 24,
+            sizeX: 100,
+            sizeY: 100,
             bombs: 0
         }
         boardData.bombs = Math.round((boardData.sizeX*boardData.sizeY) * 0.17);
-
         const BOARD_SCHEMA = generateBoard(boardData);
         generateBoardHTML(BOARD_SCHEMA);
+    }
 
+    const showMessageWithText = (text) => {
+        $('.info-message').removeClass('hidden');
+        $('.info-message').text(text);
+    }
+    const hideMessage = () => {
+        $('.info-message').addClass('hidden');
     }
 
     const preventRightClickContextMenu = () => {
-        if (document.addEventListener) {
-            document.addEventListener('contextmenu', function (e) {
+        let board = document.getElementById('board');
+        if (board.addEventListener) {
+            board.addEventListener('contextmenu', function (e) {
                 e.preventDefault();
             }, false);
         } else {
-            document.attachEvent('oncontextmenu', function () {
+            board.attachEvent('oncontextmenu', function () {
                 window.event.returnValue = false;
             });
         }
@@ -61,9 +66,6 @@ module Minesweeper {
             boardArray.push(column)
         }
         boardArray = assignBombs(data, boardArray);
-
-        console.log(boardArray);
-
         return boardArray;
     }
 
@@ -93,24 +95,44 @@ module Minesweeper {
 
     }
 
+    const initClickListeners = () => {
+        $('.restart-button').off().on('click', e => {
+            reinit();
+        })
+    }
+
     const initCellClickListener = () => {
 
-        $('.cell').mousedown(e => {
+        $('.cell').off().on('mousedown', e => {
             let cell = $(e.target);
 
             switch (e.which) {
                 case 1: // Left Mouse
                     handleClick(cell, 'defuse');
                     break;
-
                 case 3: // Right Mouse
                     handleClick(cell, 'flag');
-
                     break;
                 default:
-                    alert('You have a strange Mouse!');
+                    break;
             }
         });
+    }
+
+    const getCellElement = (cellX, cellY) => {
+        return $(`.cell[data-x="${cellX}"][data-y="${cellY}"]`);
+
+    }
+
+    const showAllBombs = () => {
+        boardArray.map(column => {
+            column.map(cell => {
+                if (cell.isBomb) {                    
+                    getCellElement(cell.x, cell.y).addClass('bomb')
+                }
+            
+            })
+        })
     }
 
     const handleClick = (cell, action) => {
@@ -119,23 +141,21 @@ module Minesweeper {
 
         const CLICKED_CELL = boardArray[CLICKED_Y][CLICKED_X];
 
-        if (CLICKED_CELL.isDisarmed) {
+        if (CLICKED_CELL.isDisarmed || gameEnded === true) {
             return;
         }
 
         if (action == 'defuse') {
             if (CLICKED_CELL.isBomb) {
-                console.log('You lost :(');
-                // Reveal all cells, bombs etc
-                // Make a "LOST message"
+                $(cell).addClass('last-clicked')
+                showAllBombs();
+                gameEnded = true;
             } else {
-                console.log('Tried defusing', CLICKED_CELL);
                 
                 disarmCell(CLICKED_CELL)
 
             }
         } else if (action == 'flag') {
-            console.log('Tried flagging', CLICKED_CELL);
             changeCellState(CLICKED_X, CLICKED_Y, 'flag')
 
         }
@@ -145,6 +165,7 @@ module Minesweeper {
         let cell = $(`.cell[data-x="${cellX}"][data-y="${cellY}"]`);
         if (state === 'disarm') {
             cell.addClass('safe');
+            cell.removeClass('flag');
             boardArray[cellY][cellX].isDisarmed = true;
 
         } else if (state === 'flag') {
@@ -184,15 +205,16 @@ module Minesweeper {
                 if (cellsAround[neighbor].isBomb === false && 
                     cellsAround[neighbor].isFlagged === false && 
                     cellsAround[neighbor].isDisarmed === false ) {
-                    disarmCell(cellsAround[neighbor]);
+                    
+                        // setTimeout(() => {
+                            disarmCell(cellsAround[neighbor])
+                        // }, 10);
                 }
             }
 
         }
 
         // check if next cells have no bombs, then open them too
-
-
     }
 
     const checkCellsAround = (cell) => {
