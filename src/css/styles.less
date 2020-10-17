@@ -14,7 +14,10 @@ h1 {
     margin: 48px auto;
     display: flex; 
     justify-content: center;
+    flex-direction: column;
     #board {
+        align-self: center;
+
         .board-row {
             display: flex;
             flex-direction: row;
@@ -29,20 +32,74 @@ h1 {
                 color: white;
                 text-align: center;
                 font-size: 26px;
+                transition: 0.2s ease-in-out;
+                background-size: 100%;
 
                 &.bomb {
-                    background-color: #f00;
+                    background-image: url('../assets/bomb.png');
                 }
 
                 &.safe {
                     background-color: rgb(204, 204, 204);
+                    
+                    // transition: 0.2s ease-in-out;
                 }
 
                 &.flag {
-                    background-color: rgb(20, 20, 20);
+                    background-image: url('../assets/flag.png');
+                }
 
+                &.last-clicked {
+                    background-color: #f00;
                 }
             }
         }
     }
+
+    .settings {
+
+    }
+
+
+    .info-message {
+        text-align: center;
+        display: block;
+        font-size:8rem;
+        position: absolute;
+        width: 100%;
+        right: 0;
+        left: 0;
+        color: red;
+
+    }
+
+    .btn-container {
+        align-self: center;
+
+        button {
+            border: 1px solid black;
+            background: none;
+            border-radius: 12px;
+            font-size: 46px;
+            margin-top: 24px;
+            padding: 1rem;
+            cursor: pointer;
+            background-color: rgb(241, 241, 241);
+            transition: 0.1s ease-in-out;
+            outline: none;
+
+
+            &:hover {
+                background-color: rgb(226, 226, 226);
+                transition: 0.1s ease-in-out;
+
+            }
+        }
+    }
+
+}
+
+
+.hidden {
+    display: none !important;
 }

@@ -12,6 +12,10 @@ h1 {
   margin: 48px auto;
   display: flex;
   justify-content: center;
+  flex-direction: column;
+}
+.container #board {
+  align-self: center;
 }
 .container #board .board-row {
   display: flex;
@@ -27,13 +31,50 @@ h1 {
   color: white;
   text-align: center;
   font-size: 26px;
+  transition: 0.2s ease-in-out;
+  background-size: 100%;
 }
 .container #board .board-row .cell.bomb {
-  background-color: #f00;
+  background-image: url('../assets/bomb.png');
 }
 .container #board .board-row .cell.safe {
   background-color: #cccccc;
 }
 .container #board .board-row .cell.flag {
-  background-color: #141414;
+  background-image: url('../assets/flag.png');
+}
+.container #board .board-row .cell.last-clicked {
+  background-color: #f00;
+}
+.container .info-message {
+  text-align: center;
+  display: block;
+  font-size: 8rem;
+  position: absolute;
+  width: 100%;
+  right: 0;
+  left: 0;
+  color: red;
+}
+.container .btn-container {
+  align-self: center;
+}
+.container .btn-container button {
+  border: 1px solid black;
+  background: none;
+  border-radius: 12px;
+  font-size: 46px;
+  margin-top: 24px;
+  padding: 1rem;
+  cursor: pointer;
+  background-color: #f1f1f1;
+  transition: 0.1s ease-in-out;
+  outline: none;
+}
+.container .btn-container button:hover {
+  background-color: #e2e2e2;
+  transition: 0.1s ease-in-out;
+}
+.hidden {
+  display: none !important;
 }
