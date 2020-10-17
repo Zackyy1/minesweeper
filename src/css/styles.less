@@ -1,0 +1,48 @@
+body {
+    padding: 0;
+    margin: 0;
+    overflow: hidden;
+    font-family: 'Roboto', sans-serif;
+}
+
+h1 {
+    text-align: center;
+}
+
+.container {
+    max-width: 1248px;
+    margin: 48px auto;
+    display: flex; 
+    justify-content: center;
+    #board {
+        .board-row {
+            display: flex;
+            flex-direction: row;
+
+            .cell {
+                width: 32px;
+                height: 32px;
+                border: 1px solid grey;
+                border-radius: 3px;
+                background-color: #ececec;
+                cursor: pointer;
+                color: white;
+                text-align: center;
+                font-size: 26px;
+
+                &.bomb {
+                    background-color: #f00;
+                }
+
+                &.safe {
+                    background-color: rgb(204, 204, 204);
+                }
+
+                &.flag {
+                    background-color: rgb(20, 20, 20);
+
+                }
+            }
+        }
+    }
+}
