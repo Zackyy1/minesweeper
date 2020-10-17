@@ -23,8 +23,8 @@ module Minesweeper {
         preventRightClickContextMenu();
         initClickListeners();
         let boardData = {
-            sizeX: 100,
-            sizeY: 100,
+            sizeX: 24,
+            sizeY: 24,
             bombs: 0
         }
         boardData.bombs = Math.round((boardData.sizeX*boardData.sizeY) * 0.17);
